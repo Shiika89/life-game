@@ -87,3 +87,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e46ae2d5e87af54195da3b0124af227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_living: 0
+  positionCell: {x: 0, y: 0}

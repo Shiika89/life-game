@@ -418,7 +418,7 @@ MonoBehaviour:
   m_gridLayoutGroup: {fileID: 1037959873}
   m_numX: 40
   m_numY: 20
-  m_initial: 0
+  m_initial: 200
 --- !u!114 &1037959873
 MonoBehaviour:
   m_ObjectHideFlags: 0

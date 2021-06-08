@@ -11,6 +11,7 @@ public class LifeGame : MonoBehaviour
     [SerializeField] int m_numY = 0;
     [SerializeField] int m_initial = 0;
     Cell[,] m_cubes;
+    int m_count = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +36,7 @@ public class LifeGame : MonoBehaviour
             for (int x = 0; x < m_numY; x++)
             {
                 var cell = Instantiate(m_cellPrefab);
+                cell.positionCell = new Vector2Int(i, x); //生成したセルのpositionを記憶
                 var parent = m_gridLayoutGroup.gameObject.transform;
                 cell.transform.SetParent(parent);
                 m_cubes[i, x] = cell;
@@ -63,6 +65,7 @@ public class LifeGame : MonoBehaviour
         }
     }
 
+    //周囲８近傍を調べる
     public Cell[] SearchCell(int r, int c)
     {
         var list = new List<Cell>();
@@ -106,5 +109,51 @@ public class LifeGame : MonoBehaviour
         }
 
         return list.ToArray();
+    }
+
+    public void LivingDead()
+    {
+        for (int i = 0; i < m_numX; i++)
+        {
+            for (int x = 0; x < m_numY; x++)
+            {
+                if (m_cubes[i, x].m_living == true)
+                {
+                    m_count++;
+                }
+                foreach (var item in SearchCell(i, x))
+                {
+                    if (item.m_living == true)
+                    {
+                        m_count++;
+                    }
+                }
+                Conditions(i, x);
+                m_count = 0;
+            }
+        }
+    }
+
+    public void Conditions(int i, int x)
+    {
+        if (m_count  == 3 && m_cubes[i,x].m_living == false)
+        {
+            m_cubes[i,x].m_living = true;
+        }
+        if (m_cubes[i,x].m_living == true)
+        {
+            if (m_count == 2 && m_count == 3)
+            {
+                m_cubes[i, x].m_living = true;
+            }
+        }
+        if (m_cubes[i, x].m_living == true && m_count <= 1)
+        {
+            m_cubes[i, x].m_living = false;
+        }
+        if (m_cubes[i, x].m_living == true && m_count >= 4)
+        {
+            m_cubes[i, x].m_living = false;
+        }
     }
 }
