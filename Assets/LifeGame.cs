@@ -36,7 +36,6 @@ public class LifeGame : MonoBehaviour
             for (int x = 0; x < m_numX; x++)
             {
                 var cell = Instantiate(m_cellPrefab);
-                cell.positionCell = new Vector2Int(x, i); //生成したセルのpositionを記憶
                 var parent = m_gridLayoutGroup.gameObject.transform;
                 cell.transform.SetParent(parent);
                 m_cubes[x, i] = cell;
@@ -68,7 +67,7 @@ public class LifeGame : MonoBehaviour
     {
         //if (Input.GetKeyDown(KeyCode.Space))
         //{
-           LivingDead();
+              LivingDead();
         //}
     }
 
@@ -76,6 +75,7 @@ public class LifeGame : MonoBehaviour
     public Cell[] SearchCell(int x, int y)
     {
         var list = new List<Cell>();
+
         var left = x - 1;
         var right = x + 1;
         var top = y - 1;
@@ -129,10 +129,6 @@ public class LifeGame : MonoBehaviour
         {
             for (int x = 0; x < m_numX; x++)
             {
-                //if (m_cubes[x, y].m_living == true)
-                //{
-                //    m_count[x,y]++;
-                //}
                 foreach (var item in SearchCell(x, y))
                 {
                     if (item.m_living == true)

@@ -7,9 +7,6 @@ using UnityEngine.UI;
 public class Cell : MonoBehaviour
 {
     public bool m_living = false;
-    public Vector2Int positionCell;
-    GameObject m_life;
-    LifeGame lifegame;
     Image m_color;
     
 
@@ -17,16 +14,12 @@ public class Cell : MonoBehaviour
     void Start()
     {
         m_color = GetComponent<Image>();
-        m_life = GameObject.Find("LifeGame");
-        lifegame = m_life.GetComponent<LifeGame>();
-        //m_living = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         LivingColor();
-        //lifegame.LivingDead();
     }
 
     public void LivingColor()
