@@ -26,7 +26,7 @@ public class Cell : MonoBehaviour
     void Update()
     {
         LivingColor();
-        lifegame.LivingDead();
+        //lifegame.LivingDead();
     }
 
     public void LivingColor()
@@ -35,7 +35,7 @@ public class Cell : MonoBehaviour
         {
             m_color.color = Color.black;
         }
-        if (m_living == true)
+        else
         {
             m_color.color = Color.green;
         }

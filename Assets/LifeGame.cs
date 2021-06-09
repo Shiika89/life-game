@@ -11,7 +11,7 @@ public class LifeGame : MonoBehaviour
     [SerializeField] int m_numY = 0;
     [SerializeField] int m_initial = 0;
     Cell[,] m_cubes;
-    int m_count = 0;
+    int[,] m_count;
 
     // Start is called before the first frame update
     void Start()
@@ -29,17 +29,17 @@ public class LifeGame : MonoBehaviour
         }
 
         m_cubes = new Cell[m_numX, m_numY];
-
+        m_count = new int[m_numX, m_numY];
         //セルを生成する
-        for (int i = 0; i < m_numX; i++)
+        for (int i = 0; i < m_numY; i++)
         {
-            for (int x = 0; x < m_numY; x++)
+            for (int x = 0; x < m_numX; x++)
             {
                 var cell = Instantiate(m_cellPrefab);
-                cell.positionCell = new Vector2Int(i, x); //生成したセルのpositionを記憶
+                cell.positionCell = new Vector2Int(x, i); //生成したセルのpositionを記憶
                 var parent = m_gridLayoutGroup.gameObject.transform;
                 cell.transform.SetParent(parent);
-                m_cubes[i, x] = cell;
+                m_cubes[x, i] = cell;
             }
         }
 
@@ -55,7 +55,6 @@ public class LifeGame : MonoBehaviour
                 if (cell.m_living == false)
                 {
                     cell.m_living = true;
-
                 }
                 else
                 {
@@ -65,46 +64,59 @@ public class LifeGame : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+           LivingDead();
+        //}
+    }
+
     //周囲８近傍を調べる
-    public Cell[] SearchCell(int r, int c)
+    public Cell[] SearchCell(int x, int y)
     {
         var list = new List<Cell>();
-
-        var left = c - 1;
-        var right = c + 1;
-        var top = r - 1;
-        var bottom = r + 1;
+        var left = x - 1;
+        var right = x + 1;
+        var top = y - 1;
+        var bottom = y + 1;
 
         if (top >= 0)
         {
-            if (left >= 0)
+            if (left >= 0 && m_cubes[left, top].m_living)
             {
-                list.Add(m_cubes[top, left]);
+                list.Add(m_cubes[left, top]);
             }
-            list.Add(m_cubes[top, c]);
-            if (right < m_numX)
+            if (m_cubes[x, top].m_living)
             {
-                list.Add(m_cubes[top, right]);
+                list.Add(m_cubes[x, top]);
+            }
+            if (right < m_numX && m_cubes[right, top].m_living)
+            {
+                list.Add(m_cubes[right, top]);
             }
         }
-        if (left >= 0)
+        if (left >= 0 && m_cubes[left, y].m_living)
         {
-            list.Add(m_cubes[r, left]);
+            list.Add(m_cubes[left, y]);
         }
-        if (right < m_numX)
+        if (right < m_numX && m_cubes[right, y].m_living)
         {
-            list.Add(m_cubes[r, right]);
+            list.Add(m_cubes[right, y]);
         }
         if (bottom < m_numY)
         {
-            if (left >= 0)
+            if (left >= 0 && m_cubes[left, bottom].m_living)
             {
-                list.Add(m_cubes[bottom, left]);
+                list.Add(m_cubes[left, bottom]);
             }
-            list.Add(m_cubes[bottom, c]);
-            if (right < m_numX)
+            if (m_cubes[x, bottom].m_living)
             {
-                list.Add(m_cubes[bottom, right]);
+                list.Add(m_cubes[x, bottom]);
+            }
+            if (right < m_numX && m_cubes[right, bottom].m_living)
+            {
+                list.Add(m_cubes[right, bottom]);
             }
         }
 
@@ -113,47 +125,59 @@ public class LifeGame : MonoBehaviour
 
     public void LivingDead()
     {
-        for (int i = 0; i < m_numX; i++)
+        for (int y = 0; y < m_numY; y++)
         {
-            for (int x = 0; x < m_numY; x++)
+            for (int x = 0; x < m_numX; x++)
             {
-                if (m_cubes[i, x].m_living == true)
-                {
-                    m_count++;
-                }
-                foreach (var item in SearchCell(i, x))
+                //if (m_cubes[x, y].m_living == true)
+                //{
+                //    m_count[x,y]++;
+                //}
+                foreach (var item in SearchCell(x, y))
                 {
                     if (item.m_living == true)
                     {
-                        m_count++;
+                        m_count[x,y]++;
                     }
                 }
-                Conditions(i, x);
-                m_count = 0;
+               
+            }
+        }
+        for (int i = 0; i < m_numY; i++)
+        {
+            for (int k = 0; k < m_numX; k++)
+            {
+                Conditions(k, i);      
+                m_count[k,i] = 0;
             }
         }
     }
 
-    public void Conditions(int i, int x)
+    public void Conditions(int x, int y)
     {
-        if (m_count  == 3 && m_cubes[i,x].m_living == false)
+        if (m_count[x,y]  == 3 && m_cubes[x,y].m_living == false)
         {
-            m_cubes[i,x].m_living = true;
+            m_cubes[x,y].m_living = true;
+            return;
         }
-        if (m_cubes[i,x].m_living == true)
+        if (m_cubes[x,y].m_living == true)
         {
-            if (m_count == 2 && m_count == 3)
+            if (m_count[x,y] == 2 || m_count[x,y] == 3)
             {
-                m_cubes[i, x].m_living = true;
+                m_cubes[x, y].m_living = true;
+                return;
             }
         }
-        if (m_cubes[i, x].m_living == true && m_count <= 1)
+        if (m_cubes[x, y].m_living == true && m_count[x,y] <= 1)
         {
-            m_cubes[i, x].m_living = false;
+            m_cubes[x, y].m_living = false;
+            return;
         }
-        if (m_cubes[i, x].m_living == true && m_count >= 4)
+        if (m_cubes[x, y].m_living == true && m_count[x,y] >= 4)
         {
-            m_cubes[i, x].m_living = false;
+            m_cubes[x, y].m_living = false;
+            return;
         }
+        m_cubes[x, y].m_living = false;
     }
 }
