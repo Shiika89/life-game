@@ -10,6 +10,8 @@ public class LifeGame : MonoBehaviour
     [SerializeField] int m_numX = 0;
     [SerializeField] int m_numY = 0;
     [SerializeField] int m_initial = 0;
+    [SerializeField] float m_intarval = 0;
+    float m_timer = 0;
     Cell[,] m_cubes;
     int[,] m_count;
 
@@ -65,10 +67,12 @@ public class LifeGame : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-              LivingDead();
-        //}
+        m_timer += Time.deltaTime;
+        if (m_timer >= m_intarval)
+        {
+            LivingDead();
+            m_timer = 0;
+        }
     }
 
     //周囲８近傍を調べる
