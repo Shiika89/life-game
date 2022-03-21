@@ -416,9 +416,10 @@ MonoBehaviour:
   m_cellPrefab: {fileID: -631676278856199505, guid: aad05acfbefa4c44bbccaf7efaed9e8d,
     type: 3}
   m_gridLayoutGroup: {fileID: 1037959873}
-  m_numX: 120
-  m_numY: 60
-  m_initial: 1000
+  m_numX: 125
+  m_numY: 70
+  m_initial: 3000
+  m_intarval: 0.1
 --- !u!114 &1037959873
 MonoBehaviour:
   m_ObjectHideFlags: 0
